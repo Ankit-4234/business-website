@@ -15,7 +15,7 @@ const enquiryItemSchema = new mongoose.Schema(
 );
 const enquirySchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, red: "User", default: null },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
     customerName: { type: String, required: true },
     customerPhone: { type: String, required: true },
     items: [enquiryItemSchema],

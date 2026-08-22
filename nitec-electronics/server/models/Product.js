@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema(
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
-      required: "true",
+      required: true,
     },
     brand: { type: String, required: true },
     images: [{ type: String, required: true }],
@@ -46,5 +46,5 @@ productSchema.pre("save", function (next) {
   }
   next();
 });
-const Product = mongoose.model("product", productSchema);
+const Product = mongoose.model("Product", productSchema);
 export default Product;

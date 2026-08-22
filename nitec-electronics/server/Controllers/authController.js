@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
 import { successResponse, errorResponse } from "../utils/apiResponse.js";
+
 export const registerUser = async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
@@ -20,12 +21,13 @@ export const registerUser = async (req, res) => {
     return errorResponse(res, 500, error.message);
   }
 };
+
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email, role: "Admin" });
+    const user = await User.findOne({ email });
     if (user && (await user.matchPassword(password))) {
-      return successResponse(res, 200, "Admin login successful", {
+      return successResponse(res, 200, "Login successful", {
         _id: user._id,
         name: user.name,
         email: user.email,
@@ -38,10 +40,11 @@ export const loginUser = async (req, res) => {
     return errorResponse(res, 500, error.message);
   }
 };
+
 export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email, role: "Admin" });
+    const user = await User.findOne({ email, role: "admin" });
     if (user && (await user.matchPassword(password))) {
       return successResponse(res, 200, "Admin login successful", {
         _id: user._id,
@@ -56,6 +59,17 @@ export const adminLogin = async (req, res) => {
     return errorResponse(res, 500, error.message);
   }
 };
+
+export const getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    if (!user) return errorResponse(res, 404, "User not found");
+    return successResponse(res, 200, "Profile fetched", user);
+  } catch (error) {
+    return errorResponse(res, 500, error.message);
+  }
+};
+
 export const updateProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
